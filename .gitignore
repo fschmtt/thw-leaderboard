@@ -28,7 +28,7 @@ coverage
 *.sw?
 
 # Devenv
-devenv*
+.devenv*
 
 # Direnv
-direnv*
+.direnv*
