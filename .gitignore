@@ -32,3 +32,5 @@ coverage
 
 # Direnv
 .direnv*
+
+leaderboard-api
