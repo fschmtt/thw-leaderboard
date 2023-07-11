@@ -1,8 +1,9 @@
-package api
+package db
 
 import (
 	"database/sql"
 	"github.com/go-sql-driver/mysql"
+	"os"
 )
 
 type Competitor struct {
@@ -17,11 +18,11 @@ type Competitor struct {
 
 func Connect() (*sql.DB, error) {
 	cfg := mysql.Config{
-		User:   "leaderboard",
-		Passwd: "leaderboard",
+		User:   os.Getenv("DATABASE_USER"),
+		Passwd: os.Getenv("DATABASE_PASSWORD"),
 		Net:    "tcp",
-		Addr:   "127.0.0.1:35721",
-		DBName: "leaderboard",
+		Addr:   os.Getenv("DATABASE_HOST") + ":" + os.Getenv("DATABASE_PORT"),
+		DBName: os.Getenv("DATABASE_NAME"),
 	}
 
 	db, err := sql.Open("mysql", cfg.FormatDSN())

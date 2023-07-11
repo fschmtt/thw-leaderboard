@@ -1,36 +1,37 @@
 package api
 
 import (
+	"database/sql"
+	"github.com/fschmtt/thw-leaderboard/db"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"os"
 )
 
-func Start() {
-	var port, present = os.LookupEnv("SERVER_ADDRESS")
-	if present != true {
-		panic("SERVER_ADDRESS is not set")
+type API struct {
+	Db *sql.DB
+}
+
+func Start(db *sql.DB) error {
+	api := &API{
+		Db: db,
 	}
 
 	r := gin.Default()
-	r.GET("/api/all", getAllCompetitors)
-	r.GET("/api/top-3", getTop3Competitors)
-	r.GET("/api/latest-5", getLatest5Competitors)
+	r.GET("/api/all", api.getAllCompetitors)
+	r.GET("/api/top-3", api.getTop3Competitors)
+	r.GET("/api/latest-5", api.getLatest5Competitors)
 
-	err := r.Run(port)
+	err := r.Run(os.Getenv("SERVER_ADDRESS"))
 	if err != nil {
-		panic(err.Error())
+		return err
 	}
+
+	return nil
 }
 
-func getAllCompetitors(c *gin.Context) {
-	db, err := Connect()
-	if err != nil {
-		panic(err.Error())
-	}
-	defer db.Close()
-
-	competitors, err := GetAllCompetitors(db)
+func (api *API) getAllCompetitors(c *gin.Context) {
+	competitors, err := db.GetAllCompetitors(api.Db)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -40,14 +41,8 @@ func getAllCompetitors(c *gin.Context) {
 	})
 }
 
-func getTop3Competitors(c *gin.Context) {
-	db, err := Connect()
-	if err != nil {
-		panic(err.Error())
-	}
-	defer db.Close()
-
-	competitors, err := GetTop3Competitors(db)
+func (api *API) getTop3Competitors(c *gin.Context) {
+	competitors, err := db.GetAllCompetitors(api.Db)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -57,14 +52,8 @@ func getTop3Competitors(c *gin.Context) {
 	})
 }
 
-func getLatest5Competitors(c *gin.Context) {
-	db, err := Connect()
-	if err != nil {
-		panic(err.Error())
-	}
-	defer db.Close()
-
-	competitors, err := GetLatest5Competitors(db)
+func (api *API) getLatest5Competitors(c *gin.Context) {
+	competitors, err := db.GetLatest5Competitors(api.Db)
 	if err != nil {
 		panic(err.Error())
 	}

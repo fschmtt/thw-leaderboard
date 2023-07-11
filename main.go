@@ -5,5 +5,13 @@ import (
 )
 
 func main() {
-	api.Start()
+	db, err := api.Connect()
+	if err != nil {
+		panic(err.Error())
+	}
+
+	err = api.Start(db)
+	if err != nil {
+		panic(err.Error())
+	}
 }
