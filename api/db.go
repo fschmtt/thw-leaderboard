@@ -32,6 +32,27 @@ func Connect() (*sql.DB, error) {
 	return db, nil
 }
 
+func GetAllCompetitors(db *sql.DB) ([]Competitor, error) {
+	rows, err := db.Query("SELECT id, identifier, name, offset_x, offset_y, fault_points, created_at FROM competitor ORDER BY fault_points ASC")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var competitors []Competitor
+	for rows.Next() {
+		var competitor Competitor
+		err := rows.Scan(&competitor.Id, &competitor.Identifier, &competitor.Name, &competitor.OffsetX, &competitor.OffsetY, &competitor.FaultPoints, &competitor.CreatedAt)
+		if err != nil {
+			return nil, err
+		}
+
+		competitors = append(competitors, competitor)
+	}
+
+	return competitors, nil
+}
+
 func GetTop3Competitors(db *sql.DB) ([]Competitor, error) {
 	rows, err := db.Query("SELECT id, identifier, name, offset_x, offset_y, fault_points, created_at FROM competitor ORDER BY fault_points ASC LIMIT 3")
 	if err != nil {

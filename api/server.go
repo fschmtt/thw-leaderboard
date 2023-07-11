@@ -12,13 +12,32 @@ func Start() {
 		panic("SERVER_ADDRESS is not set")
 	}
 
-	http.HandleFunc("/top-3", getTop3Competitors)
-	http.HandleFunc("/last-5", getLast5Competitors)
+	http.HandleFunc("/api/all", getAllCompetitors)
+	http.HandleFunc("/api/top-3", getTop3Competitors)
+	http.HandleFunc("/api/last-5", getLast5Competitors)
 
 	err := http.ListenAndServe(port, nil)
 	if err != nil {
 		panic(err.Error())
 	}
+}
+
+func getAllCompetitors(w http.ResponseWriter, r *http.Request) {
+	db, err := Connect()
+	if err != nil {
+		panic(err.Error())
+	}
+	defer db.Close()
+
+	competitors, err := GetAllCompetitors(db)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	top3, _ := json.Marshal(competitors)
+
+	w.WriteHeader(http.StatusOK)
+	w.Write(top3)
 }
 
 func getTop3Competitors(w http.ResponseWriter, r *http.Request) {
