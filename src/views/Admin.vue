@@ -1,4 +1,6 @@
 <script lang="ts">
+import axios from "axios";
+
 export default {
   data() {
     return {
@@ -10,7 +12,7 @@ export default {
   methods: {
     async onSubmit() {
       try {
-        await fetch("http://localhost:8008/api/competitor", {
+        await axios.post("http://localhost:8008/api/competitor", {
           method: "POST",
           headers: {
             Accept: "application/json",
@@ -22,12 +24,12 @@ export default {
             offsetY: this.offsetY,
           }),
         });
-      } catch (error) {
-        console.error(error);
-      } finally {
+
         this.name = null;
         this.offsetX = null;
         this.offsetY = null;
+      } catch (error) {
+        console.error(error);
       }
     },
   },

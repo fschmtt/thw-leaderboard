@@ -6,6 +6,7 @@ import (
 	"github.com/fschmtt/thw-leaderboard/db"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 	"io"
 	"net/http"
 	"os"
@@ -51,13 +52,21 @@ func (api *API) addNewCompetitor(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	var competitor db.NewCompetitor
-	err = json.Unmarshal(body, &competitor)
+	var nc db.NewCompetitor
+	err = json.Unmarshal(body, &nc)
 	if err != nil {
 		panic(err.Error())
 	}
 
-	err = db.AddNewCompetitor(competitor, api.Db)
+	validate := validator.New()
+	err = validate.Struct(nc)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+	}
+
+	err = db.AddNewCompetitor(nc, api.Db)
 	if err != nil {
 		panic(err.Error())
 	}
