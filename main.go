@@ -2,15 +2,16 @@ package main
 
 import (
 	"github.com/fschmtt/thw-leaderboard/api"
+	"github.com/fschmtt/thw-leaderboard/db"
 )
 
 func main() {
-	db, err := api.Connect()
+	d, err := db.Connect()
 	if err != nil {
 		panic(err.Error())
 	}
 
-	err = api.Start(db)
+	err = api.Start(d)
 	if err != nil {
 		panic(err.Error())
 	}
