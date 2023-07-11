@@ -8,7 +8,18 @@ defineProps<{
 </script>
 
 <template>
-  <RankingListItem v-for="competitor in competitors" :competitor="competitor" />
+  <div class="rankingList">
+    <RankingListItem
+      v-for="competitor in competitors"
+      :competitor="competitor"
+    />
+  </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.rankingList {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+</style>
