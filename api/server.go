@@ -23,9 +23,7 @@ func Start(db *sql.DB) error {
 	r := gin.Default()
 	r.Use(cors.Default())
 
-	r.GET("/api/all", api.getAllCompetitors)
-	r.GET("/api/top-3", api.getTop3Competitors)
-	r.GET("/api/latest-5", api.getLatest5Competitors)
+	r.GET("/api/competitor", api.getAllCompetitors)
 	r.POST("/api/competitor", api.addNewCompetitor)
 
 	err := r.Run(os.Getenv("SERVER_ADDRESS"))
@@ -37,29 +35,7 @@ func Start(db *sql.DB) error {
 }
 
 func (api *API) getAllCompetitors(c *gin.Context) {
-	competitors, err := db.GetAllCompetitors(api.Db)
-	if err != nil {
-		panic(err.Error())
-	}
-
-	c.JSON(http.StatusOK, gin.H{
-		"competitors": competitors,
-	})
-}
-
-func (api *API) getTop3Competitors(c *gin.Context) {
-	competitors, err := db.GetTop3Competitors(api.Db)
-	if err != nil {
-		panic(err.Error())
-	}
-
-	c.JSON(http.StatusOK, gin.H{
-		"competitors": competitors,
-	})
-}
-
-func (api *API) getLatest5Competitors(c *gin.Context) {
-	competitors, err := db.GetLatest5Competitors(api.Db)
+	competitors, err := db.GetCompetitors(api.Db)
 	if err != nil {
 		panic(err.Error())
 	}

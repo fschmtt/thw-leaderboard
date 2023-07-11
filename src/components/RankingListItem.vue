@@ -8,9 +8,9 @@ defineProps<{
 
 <template>
   <div class="rankingListItem">
-    <p class="rank">#15</p>
+    <p class="rank">#{{ competitor.rank }}</p>
     <p class="name">{{ competitor.name }}</p>
-    <p class="score">{{ competitor.faultPoints }}</p>
+    <p class="score">{{ competitor.score.toFixed(2) }}</p>
   </div>
 </template>
 

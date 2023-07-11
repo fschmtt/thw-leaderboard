@@ -5,7 +5,6 @@ import (
 	"github.com/go-sql-driver/mysql"
 	"log"
 	"math"
-	"math/rand"
 	"os"
 )
 
@@ -16,13 +15,13 @@ type NewCompetitor struct {
 }
 
 type Competitor struct {
-	Id          int    `json:"id"`
-	Identifier  string `json:"identifier"`
-	Name        string `json:"name"`
-	OffsetX     int    `json:"offsetX"`
-	OffsetY     int    `json:"offsetY"`
-	FaultPoints int    `json:"faultPoints"`
-	CreatedAt   string `json:"createdAt"`
+	Id        int     `json:"id"`
+	Name      string  `json:"name"`
+	OffsetX   int     `json:"offsetX"`
+	OffsetY   int     `json:"offsetY"`
+	Score     float64 `json:"score"`
+	CreatedAt string  `json:"createdAt"`
+	Rank      int     `json:"rank"`
 }
 
 func Connect() (*sql.DB, error) {
@@ -42,64 +41,26 @@ func Connect() (*sql.DB, error) {
 	return db, nil
 }
 
-func GetAllCompetitors(db *sql.DB) ([]Competitor, error) {
-	rows, err := db.Query("SELECT id, identifier, name, offset_x, offset_y, fault_points, created_at FROM competitor ORDER BY fault_points ASC")
+func GetCompetitors(db *sql.DB) ([]Competitor, error) {
+	rows, err := db.Query("SELECT id, name, offset_x, offset_y, score, created_at FROM competitor ORDER BY score ASC")
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
 	var competitors []Competitor
+	var rank = 1
 	for rows.Next() {
 		var competitor Competitor
-		err := rows.Scan(&competitor.Id, &competitor.Identifier, &competitor.Name, &competitor.OffsetX, &competitor.OffsetY, &competitor.FaultPoints, &competitor.CreatedAt)
+		err := rows.Scan(&competitor.Id, &competitor.Name, &competitor.OffsetX, &competitor.OffsetY, &competitor.Score, &competitor.CreatedAt)
 		if err != nil {
 			return nil, err
 		}
 
+		competitor.Rank = rank
 		competitors = append(competitors, competitor)
-	}
 
-	return competitors, nil
-}
-
-func GetTop3Competitors(db *sql.DB) ([]Competitor, error) {
-	rows, err := db.Query("SELECT id, identifier, name, offset_x, offset_y, fault_points, created_at FROM competitor ORDER BY fault_points ASC LIMIT 3")
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	var competitors []Competitor
-	for rows.Next() {
-		var competitor Competitor
-		err := rows.Scan(&competitor.Id, &competitor.Identifier, &competitor.Name, &competitor.OffsetX, &competitor.OffsetY, &competitor.FaultPoints, &competitor.CreatedAt)
-		if err != nil {
-			return nil, err
-		}
-
-		competitors = append(competitors, competitor)
-	}
-
-	return competitors, nil
-}
-
-func GetLatest5Competitors(db *sql.DB) ([]Competitor, error) {
-	rows, err := db.Query("SELECT id, identifier, name, offset_x, offset_y, fault_points, created_at FROM competitor ORDER BY id DESC LIMIT 3")
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	var competitors []Competitor
-	for rows.Next() {
-		var competitor Competitor
-		err := rows.Scan(&competitor.Id, &competitor.Identifier, &competitor.Name, &competitor.OffsetX, &competitor.OffsetY, &competitor.FaultPoints, &competitor.CreatedAt)
-		if err != nil {
-			return nil, err
-		}
-
-		competitors = append(competitors, competitor)
+		rank++
 	}
 
 	return competitors, nil
@@ -108,15 +69,15 @@ func GetLatest5Competitors(db *sql.DB) ([]Competitor, error) {
 func AddNewCompetitor(nc NewCompetitor, db *sql.DB) error {
 	x := float64(nc.OffsetX)
 	y := float64(nc.OffsetY)
-	faultPoints := math.Sqrt(math.Pow(x, 2) + (math.Pow(y, 2)))
-	log.Println(faultPoints)
+	score := math.Sqrt(math.Pow(x, 2) + (math.Pow(y, 2)))
+	log.Println(score)
 
-	stmt, err := db.Prepare("INSERT INTO competitor (identifier, name, offset_x, offset_y, fault_points) VALUES (?, ?, ?, ?, ?)")
+	stmt, err := db.Prepare("INSERT INTO competitor (name, offset_x, offset_y, score) VALUES (?, ?, ?, ?)")
 	if err != nil {
 		return err
 	}
 
-	_, err = stmt.Exec(rand.Int(), nc.Name, nc.OffsetX, nc.OffsetY, faultPoints)
+	_, err = stmt.Exec(nc.Name, nc.OffsetX, nc.OffsetY, score)
 	if err != nil {
 		return err
 	}

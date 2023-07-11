@@ -4,10 +4,12 @@ import RankingList from "@/components/RankingList.vue";
 import Podium from "@/components/Podium.vue";
 
 type Competitor = {
+  id: number;
   name: string;
-  faultPoints: number;
+  score: number;
   offsetX: number;
   offsetY: number;
+  rank: number;
 };
 export type { Competitor };
 
@@ -20,8 +22,22 @@ export default {
     };
   },
 
+  computed: {
+    top3Competitors(): Competitor[] {
+      return [...this.competitors].slice(0, 3);
+    },
+
+    topCompetitors(): Competitor[] {
+      return [...this.competitors].slice(3, 10);
+    },
+
+    latest10Competitors(): Competitor[] {
+      return [...this.competitors].sort((a, b) => b.id - a.id).slice(0, 10);
+    },
+  },
+
   mounted() {
-    axios.get("http://localhost:8008/api/all").then((response) => {
+    axios.get("http://localhost:8008/api/competitor").then((response) => {
       this.competitors = response.data.competitors;
     });
   },
@@ -32,12 +48,12 @@ export default {
   <main>
     <div class="section">
       <h2>Bestenliste</h2>
-      <Podium :competitors="competitors" />
-      <RankingList :competitors="competitors" />
+      <Podium :competitors="top3Competitors" />
+      <RankingList :competitors="topCompetitors" />
     </div>
     <div class="section">
       <h2>Letzte Versuche</h2>
-      <RankingList :competitors="competitors" />
+      <RankingList :competitors="latest10Competitors" />
     </div>
   </main>
 </template>

@@ -11,19 +11,19 @@ defineProps<{
     <div class="podium-step step-2">
       <p class="rank">#2</p>
       <p class="name">{{ competitors[1].name }}</p>
-      <p class="score">{{ competitors[1].faultPoints }}</p>
+      <p class="score">{{ competitors[1].score.toFixed(2) }}</p>
       <span class="podium-step__background"></span>
     </div>
     <div class="podium-step step-1">
       <p class="rank">#1</p>
       <p class="name">{{ competitors[0].name }}</p>
-      <p class="score">{{ competitors[0].faultPoints }}</p>
+      <p class="score">{{ competitors[0].score.toFixed(2) }}</p>
       <span class="podium-step__background"></span>
     </div>
     <div class="podium-step step-3">
       <p class="rank">#3</p>
       <p class="name">{{ competitors[2].name }}</p>
-      <p class="score">{{ competitors[2].faultPoints }}</p>
+      <p class="score">{{ competitors[2].score.toFixed(2) }}</p>
       <span class="podium-step__background"></span>
     </div>
   </div>
