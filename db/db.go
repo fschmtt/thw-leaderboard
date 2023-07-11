@@ -3,8 +3,17 @@ package db
 import (
 	"database/sql"
 	"github.com/go-sql-driver/mysql"
+	"log"
+	"math"
+	"math/rand"
 	"os"
 )
+
+type NewCompetitor struct {
+	Name    string `json:"name" validate:"required"`
+	OffsetX int    `json:"offsetX" validate:"required"`
+	OffsetY int    `json:"offsetY" validate:"required"`
+}
 
 type Competitor struct {
 	Id          int    `json:"id"`
@@ -94,4 +103,23 @@ func GetLatest5Competitors(db *sql.DB) ([]Competitor, error) {
 	}
 
 	return competitors, nil
+}
+
+func AddNewCompetitor(nc NewCompetitor, db *sql.DB) error {
+	x := float64(nc.OffsetX)
+	y := float64(nc.OffsetY)
+	faultPoints := math.Sqrt(math.Pow(x, 2) + (math.Pow(y, 2)))
+	log.Println(faultPoints)
+
+	stmt, err := db.Prepare("INSERT INTO competitor (identifier, name, offset_x, offset_y, fault_points) VALUES (?, ?, ?, ?, ?)")
+	if err != nil {
+		return err
+	}
+
+	_, err = stmt.Exec(rand.Int(), nc.Name, nc.OffsetX, nc.OffsetY, faultPoints)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
