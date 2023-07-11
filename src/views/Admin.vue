@@ -47,7 +47,8 @@ export default {
 
       <label for="offsetY">Abweichung Y</label>
       <input type="number" name="offsetY" id="offsetY" v-model="offsetY" />
-      <button type="submit" :disabled="isButtonDisabled">Absenden</button>
+
+      <button type="submit" :disabled="isButtonDisabled">Hinzufügen</button>
     </form>
   </main>
 </template>
@@ -75,5 +76,14 @@ button {
   width: 100%;
   padding: 16px 8px;
   font-size: 16px;
+  background-color: #003399;
+  color: white;
+  font-weight: bold;
+  border: none;
+}
+
+button[disabled] {
+  background-color: #e6e6e6;
+  color: #999999;
 }
 </style>
