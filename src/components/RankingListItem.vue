@@ -1,9 +1,16 @@
 <script setup lang="ts">
+import type { Competitor } from "@/views/Leaderboard.vue";
+
 defineProps<{
-  competitor: object;
+  competitor: Competitor;
 }>();
 </script>
 
-<template></template>
+<template>
+  <div>
+    <p>{{ competitor.name }}</p>
+    <p>{{ competitor.faultPoints }}</p>
+  </div>
+</template>
 
 <style scoped></style>
