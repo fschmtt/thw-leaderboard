@@ -1,7 +1,7 @@
 package api
 
 import (
-	"encoding/json"
+	"github.com/gin-gonic/gin"
 	"net/http"
 	"os"
 )
@@ -12,17 +12,18 @@ func Start() {
 		panic("SERVER_ADDRESS is not set")
 	}
 
-	http.HandleFunc("/api/all", getAllCompetitors)
-	http.HandleFunc("/api/top-3", getTop3Competitors)
-	http.HandleFunc("/api/last-5", getLast5Competitors)
+	r := gin.Default()
+	r.GET("/api/all", getAllCompetitors)
+	r.GET("/api/top-3", getTop3Competitors)
+	r.GET("/api/last-5", getLast5Competitors)
 
-	err := http.ListenAndServe(port, nil)
+	err := r.Run(port)
 	if err != nil {
 		panic(err.Error())
 	}
 }
 
-func getAllCompetitors(w http.ResponseWriter, r *http.Request) {
+func getAllCompetitors(c *gin.Context) {
 	db, err := Connect()
 	if err != nil {
 		panic(err.Error())
@@ -34,13 +35,12 @@ func getAllCompetitors(w http.ResponseWriter, r *http.Request) {
 		panic(err.Error())
 	}
 
-	top3, _ := json.Marshal(competitors)
-
-	w.WriteHeader(http.StatusOK)
-	w.Write(top3)
+	c.JSON(http.StatusOK, gin.H{
+		"competitors": competitors,
+	})
 }
 
-func getTop3Competitors(w http.ResponseWriter, r *http.Request) {
+func getTop3Competitors(c *gin.Context) {
 	db, err := Connect()
 	if err != nil {
 		panic(err.Error())
@@ -52,13 +52,12 @@ func getTop3Competitors(w http.ResponseWriter, r *http.Request) {
 		panic(err.Error())
 	}
 
-	top3, _ := json.Marshal(competitors)
-
-	w.WriteHeader(http.StatusOK)
-	w.Write(top3)
+	c.JSON(http.StatusOK, gin.H{
+		"competitors": competitors,
+	})
 }
 
-func getLast5Competitors(w http.ResponseWriter, r *http.Request) {
+func getLast5Competitors(c *gin.Context) {
 	db, err := Connect()
 	if err != nil {
 		panic(err.Error())
@@ -70,8 +69,7 @@ func getLast5Competitors(w http.ResponseWriter, r *http.Request) {
 		panic(err.Error())
 	}
 
-	last5, _ := json.Marshal(competitors)
-
-	w.WriteHeader(http.StatusOK)
-	w.Write(last5)
+	c.JSON(http.StatusOK, gin.H{
+		"competitors": competitors,
+	})
 }
