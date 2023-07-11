@@ -9,20 +9,20 @@ export default {
       offsetY: null,
     };
   },
+
+  computed: {
+    isButtonDisabled(): boolean {
+      return !this.name || !this.offsetX || !this.offsetY;
+    },
+  },
+
   methods: {
     async onSubmit() {
       try {
         await axios.post("http://localhost:8008/api/competitor", {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name: this.name,
-            offsetX: this.offsetX,
-            offsetY: this.offsetY,
-          }),
+          name: this.name,
+          offsetX: this.offsetX,
+          offsetY: this.offsetY,
         });
 
         this.name = null;
@@ -40,14 +40,40 @@ export default {
   <main>
     <form @submit.prevent="onSubmit">
       <label for="name">Name</label>
-      <input type="text" name="name" v-model="name" />
+      <input type="text" name="name" id="name" v-model="name" />
 
       <label for="offsetX">Abweichung X</label>
-      <input type="number" name="offsetX" v-model="offsetX" />
+      <input type="number" name="offsetX" id="offsetX" v-model="offsetX" />
 
       <label for="offsetY">Abweichung Y</label>
-      <input type="number" name="offsetY" v-model="offsetY" />
-      <button type="submit">Absenden</button>
+      <input type="number" name="offsetY" id="offsetY" v-model="offsetY" />
+      <button type="submit" :disabled="isButtonDisabled">Absenden</button>
     </form>
   </main>
 </template>
+
+<style scoped>
+main {
+  margin: 20px;
+}
+
+label {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+input {
+  display: block;
+  width: 100%;
+  margin-bottom: 16px;
+  padding: 16px 8px;
+  font-size: 16px;
+}
+
+button {
+  display: block;
+  width: 100%;
+  padding: 16px 8px;
+  font-size: 16px;
+}
+</style>
