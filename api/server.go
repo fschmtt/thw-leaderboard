@@ -15,7 +15,7 @@ func Start() {
 	r := gin.Default()
 	r.GET("/api/all", getAllCompetitors)
 	r.GET("/api/top-3", getTop3Competitors)
-	r.GET("/api/last-5", getLast5Competitors)
+	r.GET("/api/latest-5", getLatest5Competitors)
 
 	err := r.Run(port)
 	if err != nil {
@@ -57,14 +57,14 @@ func getTop3Competitors(c *gin.Context) {
 	})
 }
 
-func getLast5Competitors(c *gin.Context) {
+func getLatest5Competitors(c *gin.Context) {
 	db, err := Connect()
 	if err != nil {
 		panic(err.Error())
 	}
 	defer db.Close()
 
-	competitors, err := GetLast5Competitors(db)
+	competitors, err := GetLatest5Competitors(db)
 	if err != nil {
 		panic(err.Error())
 	}

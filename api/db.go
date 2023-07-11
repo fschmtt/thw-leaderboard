@@ -74,7 +74,7 @@ func GetTop3Competitors(db *sql.DB) ([]Competitor, error) {
 	return competitors, nil
 }
 
-func GetLast5Competitors(db *sql.DB) ([]Competitor, error) {
+func GetLatest5Competitors(db *sql.DB) ([]Competitor, error) {
 	rows, err := db.Query("SELECT id, identifier, name, offset_x, offset_y, fault_points, created_at FROM competitor ORDER BY id DESC LIMIT 3")
 	if err != nil {
 		return nil, err
