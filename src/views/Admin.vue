@@ -8,8 +8,27 @@ export default {
     };
   },
   methods: {
-    onSubmit() {
-      console.log(this.name, this.offsetX, this.offsetY);
+    async onSubmit() {
+      try {
+        await fetch("http://localhost:8008/api/competitor", {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: this.name,
+            offsetX: this.offsetX,
+            offsetY: this.offsetY,
+          }),
+        });
+      } catch (error) {
+        console.error(error);
+      } finally {
+        this.name = null;
+        this.offsetX = null;
+        this.offsetY = null;
+      }
     },
   },
 };

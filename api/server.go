@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"github.com/fschmtt/thw-leaderboard/db"
 	"github.com/gin-gonic/gin"
+ "github.com/gin-contrib/cors"
 	"io"
 	"net/http"
 	"os"
@@ -24,7 +25,7 @@ func Start(db *sql.DB) error {
 	r.GET("/api/top-3", api.getTop3Competitors)
 	r.GET("/api/latest-5", api.getLatest5Competitors)
 	r.POST("/api/competitor", api.addNewCompetitor)
-
+ r.Use(cors.Default())
 	err := r.Run(os.Getenv("SERVER_ADDRESS"))
 	if err != nil {
 		return err

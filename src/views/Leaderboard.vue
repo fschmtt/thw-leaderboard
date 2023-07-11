@@ -1,37 +1,7 @@
-<script setup lang="ts">
+<script lang="ts">
 import RankingList from "@/components/RankingList.vue";
-const competitors = [
-  {
-    name: "Max",
-    faultPoints: 100,
-    offsetX: 0,
-    offsetY: 0,
-  },
-  {
-    name: "Moritz",
-    faultPoints: 200,
-    offsetX: 0,
-    offsetY: 0,
-  },
-  {
-    name: "Peter",
-    faultPoints: 300,
-    offsetX: 0,
-    offsetY: 0,
-  },
-  {
-    name: "Hans",
-    faultPoints: 400,
-    offsetX: 0,
-    offsetY: 0,
-  },
-  {
-    name: "Klaus",
-    faultPoints: 500,
-    offsetX: 0,
-    offsetY: 0,
-  },
-];
+import { ref, defineComponent, onMounted } from "vue";
+import axios from "axios";
 
 type Competitor = {
   name: string;
@@ -40,6 +10,19 @@ type Competitor = {
   offsetY: number;
 };
 export type { Competitor };
+
+export default defineComponent({
+  setup() {
+    const competitors = ref([]);
+    onMounted(async () => {
+      const response = await axios("http://localhost:8008/api/all");
+      console.log(response);
+    });
+  },
+  components: {
+    RankingList,
+  },
+});
 </script>
 
 <template>
