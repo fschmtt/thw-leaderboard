@@ -63,7 +63,7 @@
       '';
 
     # Processes
-    #processes.leaderboard-api.exec = ''
-    #    start-leaderboard-api
-    #  '';
+    processes.leaderboard-api.exec = ''
+        start-leaderboard-api
+      '';
 }

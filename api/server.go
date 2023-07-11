@@ -42,7 +42,7 @@ func (api *API) getAllCompetitors(c *gin.Context) {
 }
 
 func (api *API) getTop3Competitors(c *gin.Context) {
-	competitors, err := db.GetAllCompetitors(api.Db)
+	competitors, err := db.GetTop3Competitors(api.Db)
 	if err != nil {
 		panic(err.Error())
 	}
