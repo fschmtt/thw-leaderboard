@@ -21,6 +21,8 @@ services:
       - traefik.http.routers.leaderboard.tls=true
       - traefik.http.routers.leaderboard.tls.certresolver=sample
       - traefik.http.routers.leaderboard.entrypoints=http,https
+    networks:
+      - traefik
 
   mysql:
     image: mysql:8.0
@@ -31,3 +33,9 @@ services:
       MYSQL_PASSWORD: leaderboard
     volumes:
       - ./migrations/1689036093_create_competitor_table.up.sql:/docker-entrypoint-initdb.d/1689036093_create_competitor_table.up.sql:ro
+    networks:
+      - traefik
+
+networks:
+  traefik:
+    external: true
