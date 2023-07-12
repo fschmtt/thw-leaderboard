@@ -20,6 +20,6 @@ defineProps<{
 .rankingList {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 16px;
+  gap: 12px;
 }
 </style>

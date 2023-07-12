@@ -52,7 +52,7 @@ export default {
       <RankingList :competitors="topCompetitors" />
     </div>
     <div class="section">
-      <h2>Letzte Versuche</h2>
+      <h2>Letzte Messungen</h2>
       <RankingList :competitors="latest10Competitors" />
     </div>
   </main>
@@ -64,10 +64,11 @@ main {
   grid-template-columns: 1fr 1fr;
   font-family: Arial, Helvetica, sans-serif;
   background-color: #eff1f5;
+  min-height: 100vh;
 }
 
 h2 {
-  margin-bottom: 96px;
+  margin-bottom: 40px;
   font-size: 56px;
   line-height: 88px;
   color: #003399;
@@ -85,10 +86,30 @@ h2::before {
   left: -72px;
 }
 .section {
-  padding: 72px;
+  padding: 48px 72px;
 }
 
 .section:nth-child(2) {
   border-left: 3px dashed #003399;
+}
+
+@media screen and (max-width: 1100px) {
+  main {
+    grid-template-columns: 1fr;
+  }
+  .section:nth-child(2) {
+    border-left: none;
+  }
+  .section {
+    padding: 5%;
+  }
+
+  h2::before {
+    display: none;
+  }
+
+  h2 {
+    margin-bottom: 40px;
+  }
 }
 </style>

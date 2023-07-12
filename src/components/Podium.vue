@@ -7,23 +7,15 @@ defineProps<{
 </script>
 
 <template>
-  <div class="podium-wrapper" v-if="competitors.length > 0">
-    <div class="podium-step step-2">
-      <p class="rank">#2</p>
-      <p class="name">{{ competitors[1].name }}</p>
-      <p class="score">{{ competitors[1].score.toFixed(2) }}</p>
-      <span class="podium-step__background"></span>
-    </div>
-    <div class="podium-step step-1">
-      <p class="rank">#1</p>
-      <p class="name">{{ competitors[0].name }}</p>
-      <p class="score">{{ competitors[0].score.toFixed(2) }}</p>
-      <span class="podium-step__background"></span>
-    </div>
-    <div class="podium-step step-3">
-      <p class="rank">#3</p>
-      <p class="name">{{ competitors[2].name }}</p>
-      <p class="score">{{ competitors[2].score.toFixed(2) }}</p>
+  <div class="podium-wrapper">
+    <div
+      class="podium-step"
+      v-for="competitor in competitors"
+      :class="`step-${competitor.rank}`"
+    >
+      <p class="rank">#{{ competitor.rank }}</p>
+      <p class="name">{{ competitor.name }}</p>
+      <p class="score">{{ competitor.score.toFixed(2) }}</p>
       <span class="podium-step__background"></span>
     </div>
   </div>
@@ -33,9 +25,10 @@ defineProps<{
 .podium-wrapper {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  gap: 24px;
-  height: 260px;
-  margin-bottom: 16px;
+  grid-template-areas: "step-2 step-1 step-3";
+  gap: 12px;
+  min-height: 252px;
+  margin-bottom: 12px;
 }
 
 .podium-step__background {
@@ -64,18 +57,30 @@ defineProps<{
   display: inline-block;
 }
 
+.step-1 {
+  grid-area: step-1;
+}
+
+.step-2 {
+  grid-area: step-2;
+}
+
+.step-3 {
+  grid-area: step-3;
+}
+
 .step-1 .rank {
   background-color: #ffd173;
 }
 
 .step-2 .rank {
   background-color: #eaeaea;
-  margin-top: 50%;
+  margin-top: 60px;
 }
 
 .step-3 .rank {
   background-color: #eccec6;
-  margin-top: 75%;
+  margin-top: 100px;
 }
 
 .name {

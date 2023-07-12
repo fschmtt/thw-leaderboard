@@ -33,6 +33,7 @@ defineProps<{
   line-height: 30px;
   padding: 6px 10px;
   text-align: center;
+  min-width: 80px;
 }
 .name {
   font-size: 24px;
