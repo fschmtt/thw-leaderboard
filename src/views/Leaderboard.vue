@@ -2,6 +2,7 @@
 import axios from "axios";
 import RankingList from "@/components/RankingList.vue";
 import Podium from "@/components/Podium.vue";
+import * as process from "process";
 
 type Competitor = {
   id: number;
@@ -39,7 +40,7 @@ export default {
 
   methods: {
     async fetchCompetitors() {
-      axios.get("http://localhost:8008/api/competitor").then((response) => {
+      axios.get(`${import.meta.env.VITE_LEADERBOARD_API_URL}/api/competitor`).then((response) => {
         this.competitors = response.data.competitors;
       });
     },

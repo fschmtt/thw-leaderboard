@@ -19,7 +19,7 @@ export default {
   methods: {
     async onSubmit() {
       try {
-        await axios.post("http://localhost:8008/api/competitor", {
+        await axios.post(`${import.meta.env.VITE_LEADERBOARD_API_URL}/api/competitor`, {
           name: this.name,
           offsetX: this.offsetX,
           offsetY: this.offsetY,

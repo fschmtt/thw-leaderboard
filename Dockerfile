@@ -4,6 +4,7 @@ WORKDIR /app
 
 COPY public ./public
 COPY src ./src
+COPY .env.production ./
 COPY index.html ./
 COPY env.d.ts ./
 COPY package.json ./

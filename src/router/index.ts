@@ -1,4 +1,4 @@
-import {createRouter, createWebHashHistory, createWebHistory} from "vue-router";
+import {createRouter, createWebHashHistory} from "vue-router";
 import Admin from "../views/Admin.vue";
 import Leaderboard from "../views/Leaderboard.vue";
 
