@@ -2,7 +2,6 @@
 import axios from "axios";
 import RankingList from "@/components/RankingList.vue";
 import Podium from "@/components/Podium.vue";
-import * as process from "process";
 
 type Competitor = {
   id: number;
