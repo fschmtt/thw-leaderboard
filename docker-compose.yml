@@ -11,6 +11,7 @@ services:
       DATABASE_NAME: leaderboard
       DATABASE_USER: leaderboard
       DATABASE_PASSWORD: leaderboard
+      SERVER_ADDRESS: ":80"
     labels:
       - traefik.enable=true
       - traefik.http.middlewares.https_redirect.redirectscheme.scheme=https
