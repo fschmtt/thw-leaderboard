@@ -19,8 +19,7 @@ export default {
   data() {
     return {
       competitors: [] as Competitor[],
-      countdown: 0,
-      scaleX: 0,
+      countdown: 30,
     };
   },
 
@@ -36,13 +35,6 @@ export default {
     latest10Competitors(): Competitor[] {
       return [...this.competitors].sort((a, b) => b.id - a.id).slice(0, 10);
     },
-
-    loaderStyles() {
-      return [
-        `transform: scaleX(${this.scaleX})`,
-        this.countdown == 0 ? "transition: none" : "",
-      ];
-    },
   },
 
   methods: {
@@ -53,13 +45,11 @@ export default {
     },
 
     timer() {
-      this.scaleX = this.countdown * 0.1;
-      this.countdown++;
-      if (this.countdown == 10) {
+      this.countdown--;
+
+      if (this.countdown == 0) {
         this.fetchCompetitors();
-        setTimeout(() => {
-          this.countdown = 0;
-        }, 1000);
+        this.countdown = 30;
       }
     },
 
@@ -68,15 +58,14 @@ export default {
     },
   },
 
-  created() {
-    this.fetchCompetitors();
+  async created() {
+    await this.fetchCompetitors();
     this.initCountdown();
   },
 };
 </script>
 
 <template>
-  <div class="loader" :style="loaderStyles"></div>
   <main>
     <div class="section">
       <h2>Bestenliste</h2>
@@ -91,18 +80,6 @@ export default {
 </template>
 
 <style scoped>
-.loader {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 5px;
-  background-color: #003399;
-  z-index: 999;
-  transform-origin: left;
-  transition: transform 1s linear;
-}
-
 main {
   display: grid;
   grid-template-columns: 1fr 1fr;
