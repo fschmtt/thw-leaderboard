@@ -24,6 +24,9 @@ func Start(db *sql.DB) error {
 	r := gin.Default()
 	r.Use(cors.Default())
 
+	r.Static("/leaderboard", "./frontend")
+	r.Static("/assets", "./frontend/assets")
+
 	r.GET("/api/competitor", api.getAllCompetitors)
 	r.POST("/api/competitor", api.addNewCompetitor)
 

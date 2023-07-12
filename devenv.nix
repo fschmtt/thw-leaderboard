@@ -53,17 +53,17 @@
 
     # Scripts
     scripts.build-leaderboard-api.exec = ''
-        go build -o leaderboard-api main.go
-      '';
+      go mod download && go build -o leaderboard-api main.go
+    '';
 
     scripts.start-leaderboard-api.exec = ''
-          go mod download && build-leaderboard-api
+      build-leaderboard-api
 
-        ./leaderboard-api
-      '';
+      ./leaderboard-api
+    '';
 
     # Processes
     processes.leaderboard-api.exec = ''
-        start-leaderboard-api
-      '';
+      start-leaderboard-api
+    '';
 }
