@@ -34,9 +34,14 @@ services:
       MYSQL_PASSWORD: leaderboard
     volumes:
       - ./migrations/1689036093_create_competitor_table.up.sql:/docker-entrypoint-initdb.d/1689036093_create_competitor_table.up.sql:ro
+      - leaderboard-mysql:/var/lib/mysql:rw
     networks:
       - traefik
 
 networks:
   traefik:
+    external: true
+
+volumes:
+  leaderboard-mysql:
     external: true
