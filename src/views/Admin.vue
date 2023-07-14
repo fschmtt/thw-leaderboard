@@ -12,7 +12,19 @@ export default {
 
   computed: {
     isButtonDisabled(): boolean {
-      return !this.name || !this.offsetX || !this.offsetY;
+      if (!this.name) {
+        return true;
+      }
+
+      if (this.offsetX === null || this.offsetX < 0) {
+        return true;
+      }
+
+      if (this.offsetY === null || this.offsetY < 0) {
+        return true;
+      }
+
+      return false;
     },
   },
 
@@ -40,13 +52,13 @@ export default {
   <main>
     <form @submit.prevent="onSubmit">
       <label for="name">Name</label>
-      <input type="text" name="name" id="name" v-model="name" />
+      <input type="text" name="name" id="name" autocomplete="off" v-model="name" />
 
-      <label for="offsetX">Abweichung X</label>
-      <input type="number" name="offsetX" id="offsetX" v-model="offsetX" />
+      <label for="offsetX">Abweichung X [mm]</label>
+      <input type="number" name="offsetX" id="offsetX" min="0" step="1" autocomplete="false" v-model="offsetX" />
 
-      <label for="offsetY">Abweichung Y</label>
-      <input type="number" name="offsetY" id="offsetY" v-model="offsetY" />
+      <label for="offsetY">Abweichung Y [mm]</label>
+      <input type="number" name="offsetY" id="offsetY" min="0" step="1" autocomplete="false" v-model="offsetY" />
 
       <button type="submit" :disabled="isButtonDisabled">Hinzufügen</button>
     </form>

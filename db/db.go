@@ -69,7 +69,7 @@ func GetCompetitors(db *sql.DB) ([]Competitor, error) {
 func AddNewCompetitor(nc NewCompetitor, db *sql.DB) error {
 	x := float64(nc.OffsetX)
 	y := float64(nc.OffsetY)
-	score := math.Sqrt(math.Pow(x, 2) + (math.Pow(y, 2)))
+	score := math.Sqrt(math.Pow(x, 2)+(math.Pow(y, 2))) * 0.1
 	log.Println(score)
 
 	stmt, err := db.Prepare("INSERT INTO competitor (name, offset_x, offset_y, score) VALUES (?, ?, ?, ?)")

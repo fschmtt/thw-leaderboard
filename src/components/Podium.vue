@@ -100,6 +100,6 @@ defineProps<{
 }
 
 .score::after {
-  content: " mm";
+  content: " cm";
 }
 </style>
