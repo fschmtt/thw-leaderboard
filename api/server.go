@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"github.com/fschmtt/thw-leaderboard/db"
 	"github.com/gin-contrib/cors"
+	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"io"
@@ -24,8 +25,8 @@ func Start(db *sql.DB) error {
 	r := gin.Default()
 	r.Use(cors.Default())
 
-	r.Static("/leaderboard", "./frontend")
-	r.Static("/assets", "./frontend/assets")
+	r.Use(static.Serve("/", static.LocalFile("./frontend", false)))
+	r.Use(static.Serve("/assets", static.LocalFile("./frontend/assets", false)))
 
 	r.GET("/api/competitor", api.getAllCompetitors)
 	r.POST("/api/competitor", api.addNewCompetitor)
