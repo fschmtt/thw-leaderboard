@@ -1,10 +1,11 @@
 <script lang="ts">
-import axios from "axios";
+import axios from 'axios';
 
 export default {
   data() {
     return {
       name: null,
+      identifier: null,
       offsetX: null,
       offsetY: null,
     };
@@ -12,7 +13,7 @@ export default {
 
   computed: {
     isButtonDisabled(): boolean {
-      if (!this.name) {
+      if (this.identifier === null || this.identifier < 1000) {
         return true;
       }
 
@@ -33,11 +34,13 @@ export default {
       try {
         await axios.post(`${import.meta.env.VITE_LEADERBOARD_API_URL}/api/competitor`, {
           name: this.name,
+          identifier: this.identifier,
           offsetX: this.offsetX,
           offsetY: this.offsetY,
         });
 
         this.name = null;
+        this.identifier = null;
         this.offsetX = null;
         this.offsetY = null;
       } catch (error) {
@@ -51,8 +54,11 @@ export default {
 <template>
   <main>
     <form @submit.prevent="onSubmit">
-      <label for="name">Name</label>
+      <label for="name">Name (optional)</label>
       <input type="text" name="name" id="name" autocomplete="off" v-model="name" />
+
+      <label for="identifier">Spielernummer</label>
+      <input type="number" name="identifier" id="identifier" min="1000" step="1" autocomplete="false" v-model="identifier" />
 
       <label for="offsetX">Abweichung X [mm]</label>
       <input type="number" name="offsetX" id="offsetX" min="0" step="1" autocomplete="false" v-model="offsetX" />

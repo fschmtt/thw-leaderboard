@@ -45,6 +45,10 @@ func (api *API) getAllCompetitors(c *gin.Context) {
 		panic(err.Error())
 	}
 
+	if competitors == nil {
+		competitors = []db.Competitor{}
+	}
+
 	c.JSON(http.StatusOK, gin.H{
 		"competitors": competitors,
 	})

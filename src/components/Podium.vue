@@ -14,7 +14,7 @@ defineProps<{
       :class="`step-${competitor.rank}`"
     >
       <p class="rank">#{{ competitor.rank }}</p>
-      <p class="name">{{ competitor.name }}</p>
+      <p class="name">{{ competitor.name ?? 'Spieler' }} ({{ competitor.identifier }})</p>
       <p class="score">{{ competitor.score.toFixed(2) }}</p>
       <span class="podium-step__background"></span>
     </div>

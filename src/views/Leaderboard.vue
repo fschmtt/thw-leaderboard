@@ -6,6 +6,7 @@ import Podium from "@/components/Podium.vue";
 type Competitor = {
   id: number;
   name: string;
+  identifier: number;
   score: number;
   offsetX: number;
   offsetY: number;
