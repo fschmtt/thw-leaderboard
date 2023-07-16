@@ -21,16 +21,12 @@ FROM golang:1.20-alpine as go-builder
 
 WORKDIR /app
 
-COPY go.mod ./
-COPY go.sum ./
-COPY main.go ./
 COPY api ./api
-COPY db ./db
-COPY migrations ./migrations
 
 COPY --from=node-builder /app/dist ./frontend
 
-RUN go mod download && \
+RUN cd api && \
+    go mod download && \
     go build -o leaderboard-api main.go
 
 EXPOSE 80

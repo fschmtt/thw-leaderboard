@@ -53,7 +53,7 @@
 
     # Scripts
     scripts.build-leaderboard-api.exec = ''
-      go mod download && go build -o leaderboard-api main.go
+      go mod download && go build -o ../leaderboard-api ./api/main.go
     '';
 
     scripts.start-leaderboard-api.exec = ''
@@ -63,7 +63,7 @@
     '';
 
     # Processes
-    processes.leaderboard-api.exec = ''
-      start-leaderboard-api
-    '';
+    #processes.leaderboard-api.exec = ''
+    #  start-leaderboard-api
+    #'';
 }
