@@ -20,7 +20,7 @@ export default {
   data() {
     return {
       competitors: [] as Competitor[],
-      countdown: 30,
+      countdown: 10,
     };
   },
 
