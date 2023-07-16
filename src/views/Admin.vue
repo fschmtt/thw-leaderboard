@@ -1,13 +1,22 @@
 <script lang="ts">
-import axios from 'axios';
+import axios, {AxiosError} from 'axios';
+
+type ComponentData = {
+  name: string | null;
+  identifier: number | null;
+  offsetX: number | null;
+  offsetY: number | null;
+  error: AxiosError | null;
+};
 
 export default {
-  data() {
+  data(): ComponentData {
     return {
       name: null,
       identifier: null,
       offsetX: null,
       offsetY: null,
+      error: null,
     };
   },
 
@@ -43,8 +52,9 @@ export default {
         this.identifier = null;
         this.offsetX = null;
         this.offsetY = null;
+        this.error = null;
       } catch (error) {
-        console.error(error);
+        this.error = error;
       }
     },
   },
@@ -53,6 +63,8 @@ export default {
 
 <template>
   <main>
+    <div class="error" v-if="error"><strong>{{ error }}:</strong> {{ error.response?.data?.error }}</div>
+
     <form @submit.prevent="onSubmit">
       <label for="name">Name (optional)</label>
       <input type="text" name="name" id="name" autocomplete="off" v-model="name" />
@@ -98,10 +110,19 @@ button {
   color: white;
   font-weight: bold;
   border: none;
+  cursor: pointer;
 }
 
 button[disabled] {
   background-color: #e6e6e6;
   color: #999999;
+}
+
+.error {
+  color: red;
+  border: 1px solid red;
+  background-color: #ffe6e6;
+  padding: 8px;
+  margin-bottom: 16px;
 }
 </style>

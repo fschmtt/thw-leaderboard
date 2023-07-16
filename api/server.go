@@ -76,7 +76,9 @@ func (api *API) addNewCompetitor(c *gin.Context) {
 
 	err = db.AddNewCompetitor(nc, api.Db)
 	if err != nil {
-		panic(err.Error())
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
 	}
 
 	c.Status(http.StatusCreated)

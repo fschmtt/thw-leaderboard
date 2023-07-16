@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS `competitor`
     `offset_y`   int(11)     NOT NULL,
     `score`      float(8, 2) NOT NULL,
     `created_at` datetime    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `identifier` (`identifier`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
