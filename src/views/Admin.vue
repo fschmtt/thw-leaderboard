@@ -36,6 +36,11 @@ export default {
 
       return false;
     },
+
+    errorMessage() {
+      // @ts-expect-error
+      return this.error?.response?.data?.error;
+    }
   },
 
   methods: {
@@ -54,7 +59,7 @@ export default {
         this.offsetY = null;
         this.error = null;
       } catch (error) {
-        this.error = error;
+        this.error = error as AxiosError;
       }
     },
   },
@@ -63,7 +68,8 @@ export default {
 
 <template>
   <main>
-    <div class="error" v-if="error"><strong>{{ error }}:</strong> {{ error.response?.data?.error }}</div>
+    <!-- @ts-ignore -->
+    <div class="error" v-if="error"><strong>{{ error }}:</strong> {{ errorMessage }}</div>
 
     <form @submit.prevent="onSubmit">
       <label for="name">Name (optional)</label>
