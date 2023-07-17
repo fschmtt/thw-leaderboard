@@ -1,5 +1,8 @@
 <script lang="ts">
 import axios, {AxiosError} from 'axios';
+import type {Competitor} from "@/views/Leaderboard.vue";
+import RankingListItem from "@/components/RankingListItem.vue";
+import RankingList from "@/components/RankingList.vue";
 
 type ComponentData = {
   name: string | null;
@@ -7,9 +10,11 @@ type ComponentData = {
   offsetX: number | null;
   offsetY: number | null;
   error: AxiosError | null;
+  competitors: Array<Competitor>;
 };
 
 export default {
+  components: {RankingList, RankingListItem},
   data(): ComponentData {
     return {
       name: null,
@@ -17,6 +22,7 @@ export default {
       offsetX: null,
       offsetY: null,
       error: null,
+      competitors: [],
     };
   },
 
@@ -40,11 +46,15 @@ export default {
     errorMessage() {
       // @ts-expect-error
       return this.error?.response?.data?.error;
-    }
+    },
+
+    latestCompetitors(): Competitor[] {
+      return [...this.competitors].sort((a, b) => b.id - a.id);
+    },
   },
 
   methods: {
-    async onSubmit() {
+    async addCompetitor() {
       try {
         await axios.post(`${import.meta.env.VITE_LEADERBOARD_API_URL}/api/competitor`, {
           name: this.name,
@@ -60,9 +70,21 @@ export default {
         this.error = null;
       } catch (error) {
         this.error = error as AxiosError;
+      } finally {
+        await this.fetchCompetitors();
       }
     },
+
+    async fetchCompetitors() {
+      axios.get(`${import.meta.env.VITE_LEADERBOARD_API_URL}/api/competitor`).then((response) => {
+        this.competitors = response.data.competitors;
+      });
+    },
   },
+
+  created() {
+    this.fetchCompetitors();
+  }
 };
 </script>
 
@@ -71,21 +93,28 @@ export default {
     <!-- @ts-ignore -->
     <div class="error" v-if="error"><strong>{{ error }}:</strong> {{ errorMessage }}</div>
 
-    <form @submit.prevent="onSubmit">
+    <form @submit.prevent="addCompetitor">
       <label for="name">Name (optional)</label>
-      <input type="text" name="name" id="name" autocomplete="off" v-model="name" />
+      <input type="text" name="name" id="name" autocomplete="off" v-model="name"/>
 
       <label for="identifier">Spielernummer</label>
-      <input type="number" name="identifier" id="identifier" min="1000" step="1" autocomplete="false" v-model="identifier" />
+      <input type="number" name="identifier" id="identifier" min="1000" step="1" autocomplete="false"
+             v-model="identifier"/>
 
       <label for="offsetX">Abweichung X [mm]</label>
-      <input type="number" name="offsetX" id="offsetX" min="0" step="1" autocomplete="false" v-model="offsetX" />
+      <input type="number" name="offsetX" id="offsetX" min="0" step="1" autocomplete="false" v-model="offsetX"/>
 
       <label for="offsetY">Abweichung Y [mm]</label>
-      <input type="number" name="offsetY" id="offsetY" min="0" step="1" autocomplete="false" v-model="offsetY" />
+      <input type="number" name="offsetY" id="offsetY" min="0" step="1" autocomplete="false" v-model="offsetY"/>
 
       <button type="submit" :disabled="isButtonDisabled">Hinzufügen</button>
     </form>
+
+    <hr>
+
+    <h2>Alle Spieler ({{ competitors.length }})</h2>
+
+    <RankingList :competitors="latestCompetitors"/>
   </main>
 </template>
 
@@ -117,6 +146,7 @@ button {
   font-weight: bold;
   border: none;
   cursor: pointer;
+  margin-bottom: 16px;
 }
 
 button[disabled] {
@@ -130,5 +160,9 @@ button[disabled] {
   background-color: #ffe6e6;
   padding: 8px;
   margin-bottom: 16px;
+}
+
+h2 {
+  margin: 16px 0;
 }
 </style>
