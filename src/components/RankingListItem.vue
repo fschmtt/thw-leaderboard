@@ -9,7 +9,7 @@ defineProps<{
 <template>
   <div class="rankingListItem">
     <p class="rank">#{{ competitor.rank }}</p>
-    <p class="name">{{ competitor.name ?? 'Spieler' }} ({{ competitor.identifier }})</p>
+    <p class="name">{{ competitor.name ?? 'Spieler' }} <span class="identifier">({{ competitor.identifier }})</span></p>
     <p class="score">{{ competitor.score.toFixed(2) }}</p>
   </div>
 </template>
@@ -47,11 +47,16 @@ defineProps<{
 .score {
   font-size: 24px;
   line-height: 30px;
-  font-weight: medium;
+  font-weight: 500;
   text-align: right;
 }
 
 .score::after {
   content: " cm";
+}
+
+.identifier {
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.5);
 }
 </style>

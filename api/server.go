@@ -30,6 +30,7 @@ func Start(db *sql.DB) error {
 
 	r.GET("/api/competitor", api.getAllCompetitors)
 	r.POST("/api/competitor", api.addNewCompetitor)
+	r.GET("/api/competitor/count", api.countAllCompetitors)
 
 	err := r.Run(os.Getenv("SERVER_ADDRESS"))
 	if err != nil {
@@ -47,6 +48,17 @@ func (api *API) getAllCompetitors(c *gin.Context) {
 
 	if competitors == nil {
 		competitors = []db.Competitor{}
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"competitors": competitors,
+	})
+}
+
+func (api *API) countAllCompetitors(c *gin.Context) {
+	competitors, err := db.CountCompetitors(api.Db)
+	if err != nil {
+		panic(err.Error())
 	}
 
 	c.JSON(http.StatusOK, gin.H{

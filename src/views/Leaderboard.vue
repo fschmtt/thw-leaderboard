@@ -20,7 +20,7 @@ export default {
   data() {
     return {
       competitors: [] as Competitor[],
-      countdown: 10,
+      countdown: 5,
     };
   },
 
@@ -45,12 +45,22 @@ export default {
       });
     },
 
+    async countCompetitors() {
+      axios.get(`${import.meta.env.VITE_LEADERBOARD_API_URL}/api/competitor/count`).then((response) => {
+        const count = response.data.competitors;
+
+        if (count !== this.competitors.length) {
+          this.fetchCompetitors();
+        }
+      });
+    },
+
     timer() {
       this.countdown--;
 
       if (this.countdown == 0) {
-        this.fetchCompetitors();
-        this.countdown = 30;
+        this.countCompetitors();
+        this.countdown = 5;
       }
     },
 

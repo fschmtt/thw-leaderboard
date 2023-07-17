@@ -67,6 +67,23 @@ func GetCompetitors(db *sql.DB) ([]Competitor, error) {
 	return competitors, nil
 }
 
+func CountCompetitors(db *sql.DB) (int, error) {
+	rows, err := db.Query("SELECT COUNT(id) FROM competitor")
+	if err != nil {
+		return 0, err
+	}
+	defer rows.Close()
+
+	var count int
+	for rows.Next() {
+		if err := rows.Scan(&count); err != nil {
+			return 0, err
+		}
+	}
+
+	return count, nil
+}
+
 func AddNewCompetitor(nc NewCompetitor, db *sql.DB) error {
 	x := float64(nc.OffsetX)
 	y := float64(nc.OffsetY)
