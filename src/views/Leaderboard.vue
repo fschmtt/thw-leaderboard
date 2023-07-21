@@ -65,6 +65,13 @@ export default {
     },
 
     initCountdown() {
+      if (!this.$route.query.refresh) {
+        console.log('automatic refresh disabled');
+
+        return;
+      }
+
+      console.log('automatic refresh enabled');
       setInterval(() => this.timer(), 1000);
     },
   },

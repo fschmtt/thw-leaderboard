@@ -11,7 +11,7 @@ const router = createRouter({
       component: Leaderboard,
     },
     {
-      path: "/admin",
+      path: "/s3cr3t-4dm1n",
       name: "admin",
       component: Admin,
     },
