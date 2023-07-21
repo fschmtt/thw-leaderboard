@@ -17,7 +17,7 @@ services:
       - traefik.http.middlewares.https_redirect.redirectscheme.scheme=https
       - traefik.http.middlewares.https_redirect.redirectscheme.permanent=true
       #- "traefik.http.middlewares.leaderboard.basicauth.users=thwoswe:$$2y$$05$$2vfMd8LM/adQ72EaAydQ/OkMnVMpCSOL24cIogReCocuLRvWOCYRe"
-      - traefik.http.routers.leaderboard.middlewares=leaderboard
+      #- traefik.http.routers.leaderboard.middlewares=leaderboard
       - traefik.http.routers.leaderboard.rule=Host(`leaderboard.thw-oswe.de`)
       - traefik.http.routers.leaderboard.tls=true
       - traefik.http.routers.leaderboard.tls.certresolver=sample
