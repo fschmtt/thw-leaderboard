@@ -2,17 +2,7 @@
 import axios from "axios";
 import RankingList from "@/components/RankingList.vue";
 import Podium from "@/components/Podium.vue";
-
-type Competitor = {
-  id: number;
-  name: string;
-  identifier: number;
-  score: number;
-  offsetX: number;
-  offsetY: number;
-  rank: number;
-};
-export type { Competitor };
+import type {Competitor} from "@/views/Leaderboard.vue";
 
 export default {
   components: { RankingList, Podium },
@@ -20,7 +10,22 @@ export default {
   data() {
     return {
       competitors: [] as Competitor[],
+      countdown: 5,
     };
+  },
+
+  computed: {
+    top3Competitors(): Competitor[] {
+      return [...this.competitors].slice(0, 3);
+    },
+
+    topCompetitors(): Competitor[] {
+      return [...this.competitors].slice(3, 10);
+    },
+
+    latest10Competitors(): Competitor[] {
+      return [...this.competitors].sort((a, b) => b.id - a.id).slice(0, 10);
+    },
   },
 
   methods: {
@@ -29,10 +34,41 @@ export default {
         this.competitors = response.data.competitors;
       });
     },
+
+    async countCompetitors() {
+      axios.get(`${import.meta.env.VITE_LEADERBOARD_API_URL}/api/competitor/count`).then((response) => {
+        const count = response.data.competitors;
+
+        if (count !== this.competitors.length) {
+          this.fetchCompetitors();
+        }
+      });
+    },
+
+    timer() {
+      this.countdown--;
+
+      if (this.countdown == 0) {
+        this.countCompetitors();
+        this.countdown = 5;
+      }
+    },
+
+    initCountdown() {
+      if (!this.$route.query.refresh) {
+        console.log('automatic refresh disabled');
+
+        return;
+      }
+
+      console.log('automatic refresh enabled');
+      setInterval(() => this.timer(), 1000);
+    },
   },
 
   async created() {
     await this.fetchCompetitors();
+    this.initCountdown();
   },
 };
 </script>
@@ -40,8 +76,13 @@ export default {
 <template>
   <main>
     <div class="section">
-      <h2>Bestenliste ({{ competitors.length }})</h2>
-      <RankingList :competitors="competitors" />
+      <h2>Bestenliste</h2>
+      <Podium :competitors="top3Competitors" />
+      <RankingList :competitors="topCompetitors" />
+    </div>
+    <div class="section">
+      <h2>Letzte Messungen</h2>
+      <RankingList :competitors="latest10Competitors" />
     </div>
   </main>
 </template>
