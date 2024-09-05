@@ -7,9 +7,9 @@ type Competitor = {
   id: number;
   name: string;
   identifier: number;
-  score: number;
-  offsetX: number;
-  offsetY: number;
+  target: number;
+  measurement: number;
+  offset: number;
   rank: number;
 };
 export type { Competitor };

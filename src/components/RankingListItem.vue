@@ -10,7 +10,7 @@ defineProps<{
   <div class="rankingListItem">
     <p class="rank">#{{ competitor.rank }}</p>
     <p class="name">{{ competitor.name ?? 'Spieler' }} <span class="identifier">({{ competitor.identifier }})</span></p>
-    <p class="score">{{ competitor.score.toFixed(2) }}</p>
+    <p class="offset">{{ competitor.offset.toFixed(1) }}</p>
   </div>
 </template>
 
@@ -44,14 +44,14 @@ defineProps<{
   overflow: hidden;
 }
 
-.score {
+.offset {
   font-size: 24px;
   line-height: 30px;
   font-weight: 500;
   text-align: right;
 }
 
-.score::after {
+.offset::after {
   content: " cm";
 }
 

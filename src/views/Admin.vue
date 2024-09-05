@@ -7,8 +7,8 @@ import RankingList from "@/components/RankingList.vue";
 type ComponentData = {
   name: string | null;
   identifier: number | null;
-  offsetX: number | null;
-  offsetY: number | null;
+  target: number | null;
+  measurement: number |null;
   error: AxiosError | null;
   competitors: Array<Competitor>;
 };
@@ -19,8 +19,8 @@ export default {
     return {
       name: null,
       identifier: null,
-      offsetX: null,
-      offsetY: null,
+      target: null,
+      measurement: null,
       error: null,
       competitors: [],
     };
@@ -28,15 +28,15 @@ export default {
 
   computed: {
     isButtonDisabled(): boolean {
-      if (this.identifier === null || this.identifier < 1000) {
+      if (this.identifier === null || this.identifier < 100) {
         return true;
       }
 
-      if (this.offsetX === null || this.offsetX < 0) {
+      if (this.target === null) {
         return true;
       }
 
-      if (this.offsetY === null || this.offsetY < 0) {
+      if (this.measurement === null) {
         return true;
       }
 
@@ -59,14 +59,14 @@ export default {
         await axios.post(`${import.meta.env.VITE_LEADERBOARD_API_URL}/api/competitor`, {
           name: this.name,
           identifier: this.identifier,
-          offsetX: this.offsetX,
-          offsetY: this.offsetY,
+          target: this.target,
+          measurement: this.measurement,
         });
 
         this.name = null;
         this.identifier = null;
-        this.offsetX = null;
-        this.offsetY = null;
+        this.target = null;
+        this.measurement = null;
         this.error = null;
       } catch (error) {
         this.error = error as AxiosError;
@@ -98,14 +98,14 @@ export default {
       <input type="text" name="name" id="name" autocomplete="off" v-model="name"/>
 
       <label for="identifier">Spielernummer</label>
-      <input type="number" name="identifier" id="identifier" min="1000" step="1" autocomplete="false"
+      <input type="number" name="identifier" id="identifier" min="100" step="1" autocomplete="false"
              v-model="identifier"/>
 
-      <label for="offsetX">Abweichung X [mm]</label>
-      <input type="number" name="offsetX" id="offsetX" min="0" step="1" autocomplete="false" v-model="offsetX"/>
+      <label for="target">Soll [m]</label>
+      <input type="number" name="target" id="target" min="0" step="0.01" autocomplete="false" v-model="target"/>
 
-      <label for="offsetY">Abweichung Y [mm]</label>
-      <input type="number" name="offsetY" id="offsetY" min="0" step="1" autocomplete="false" v-model="offsetY"/>
+      <label for="measurement">Gemessener Wert [m]</label>
+      <input type="number" name="measurement" id="measurement" min="0" step="0.001" autocomplete="false" v-model="measurement"/>
 
       <button type="submit" :disabled="isButtonDisabled">Hinzufügen</button>
     </form>

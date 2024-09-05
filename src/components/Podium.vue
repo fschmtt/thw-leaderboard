@@ -15,7 +15,7 @@ defineProps<{
     >
       <p class="rank">#{{ competitor.rank }}</p>
       <p class="name">{{ competitor.name ?? 'Spieler' }} <span class="identifier">({{ competitor.identifier }})</span></p>
-      <p class="score">{{ competitor.score.toFixed(2) }}</p>
+      <p class="offset">{{ competitor.offset.toFixed(2) }}</p>
       <span class="podium-step__background"></span>
     </div>
   </div>
@@ -91,7 +91,7 @@ defineProps<{
   text-align: center;
 }
 
-.score {
+.offset {
   font-size: 18px;
   line-height: 30px;
   font-weight: medium;
@@ -99,7 +99,7 @@ defineProps<{
   margin-bottom: 8px;
 }
 
-.score::after {
+.offset::after {
   content: " cm";
 }
 

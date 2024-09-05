@@ -8,21 +8,21 @@ import (
 )
 
 type NewCompetitor struct {
-	Name       *string `json:"name"`
-	Identifier int     `json:"identifier" validate:"required"`
-	OffsetX    int     `json:"offsetX" validate:"required"`
-	OffsetY    int     `json:"offsetY" validate:"required"`
+	Name        *string `json:"name"`
+	Identifier  int     `json:"identifier" validate:"required"`
+	Target      float64 `json:"target" validate:"required"`
+	Measurement float64 `json:"measurement" validate:"required"`
 }
 
 type Competitor struct {
-	Id         int     `json:"id"`
-	Name       *string `json:"name"`
-	Identifier int     `json:"identifier"`
-	OffsetX    int     `json:"offsetX"`
-	OffsetY    int     `json:"offsetY"`
-	Score      float64 `json:"score"`
-	CreatedAt  string  `json:"createdAt"`
-	Rank       int     `json:"rank"`
+	Id          int     `json:"id"`
+	Name        *string `json:"name"`
+	Identifier  int     `json:"identifier"`
+	Target      float64 `json:"target" validate:"required"`
+	Measurement float64 `json:"measurement"`
+	Offset      float64 `json:"offset"`
+	CreatedAt   string  `json:"createdAt"`
+	Rank        int     `json:"rank"`
 }
 
 func Connect() (*sql.DB, error) {
@@ -43,7 +43,7 @@ func Connect() (*sql.DB, error) {
 }
 
 func GetCompetitors(db *sql.DB) ([]Competitor, error) {
-	rows, err := db.Query("SELECT id, name, identifier, offset_x, offset_y, score, created_at FROM competitor ORDER BY score ASC, id ASC")
+	rows, err := db.Query("SELECT id, name, identifier, target, measurement, offset, created_at FROM competitor ORDER BY offset ASC, id ASC")
 	if err != nil {
 		return nil, err
 	}
@@ -53,12 +53,13 @@ func GetCompetitors(db *sql.DB) ([]Competitor, error) {
 	var rank = 1
 	for rows.Next() {
 		var competitor Competitor
-		err := rows.Scan(&competitor.Id, &competitor.Name, &competitor.Identifier, &competitor.OffsetX, &competitor.OffsetY, &competitor.Score, &competitor.CreatedAt)
+		err := rows.Scan(&competitor.Id, &competitor.Name, &competitor.Identifier, &competitor.Target, &competitor.Measurement, &competitor.Offset, &competitor.CreatedAt)
 		if err != nil {
 			return nil, err
 		}
 
 		competitor.Rank = rank
+		competitor.Offset = metersToCentimeters(competitor.Offset)
 		competitors = append(competitors, competitor)
 
 		rank++
@@ -85,19 +86,23 @@ func CountCompetitors(db *sql.DB) (int, error) {
 }
 
 func AddNewCompetitor(nc NewCompetitor, db *sql.DB) error {
-	x := float64(nc.OffsetX)
-	y := float64(nc.OffsetY)
-	score := math.Sqrt(math.Pow(x, 2)+(math.Pow(y, 2))) * 0.1
+	target := float64(nc.Target)
+	measurement := float64(nc.Measurement)
+	offset := math.Abs(target - measurement)
 
-	stmt, err := db.Prepare("INSERT INTO competitor (name, identifier, offset_x, offset_y, score) VALUES (?, ?, ?, ?, ?)")
+	stmt, err := db.Prepare("INSERT INTO competitor (name, identifier, target, measurement, offset) VALUES (?, ?, ?, ?, ?)")
 	if err != nil {
 		return err
 	}
 
-	_, err = stmt.Exec(nc.Name, nc.Identifier, nc.OffsetX, nc.OffsetY, score)
+	_, err = stmt.Exec(nc.Name, nc.Identifier, nc.Target, nc.Measurement, offset)
 	if err != nil {
 		return err
 	}
 
 	return nil
+}
+
+func metersToCentimeters(val float64) float64 {
+	return val * 100
 }
